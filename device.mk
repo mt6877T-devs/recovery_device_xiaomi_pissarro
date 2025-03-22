@@ -21,11 +21,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     bootctrl.mt6877
 
-PRODUCT_STATIC_BOOT_CONTROL_HAL := \
-    bootctrl.mt6877 \
+PRODUCT_PACKAGES += \
     libgptutils \
     libz \
-    libcutils
+    libcutils \
 
 PRODUCT_PACKAGES += \
     otapreopt_script \
