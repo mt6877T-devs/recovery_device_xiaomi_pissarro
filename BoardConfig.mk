@@ -21,7 +21,9 @@ AB_OTA_PARTITIONS += \
     vbmeta_system \
     system_ext \
     vendor \
-    product
+    product \
+    dtbo \
+    vbmeta
 
 BOARD_USES_RECOVERY_AS_BOOT := true
 
