@@ -25,6 +25,9 @@ AB_OTA_PARTITIONS += \
 
 BOARD_USES_RECOVERY_AS_BOOT := true
 
+# Assert
+TARGET_OTA_ASSERT_DEVICE := pissarro,pissarroin,pissarropro,pissarroinpro
+
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
