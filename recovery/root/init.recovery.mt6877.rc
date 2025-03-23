@@ -1,4 +1,7 @@
+import /init.recovery.microtrust.rc
+
 on init
+    export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
 
 on post-fs
     # Support A/B feature for EMMC and UFS boot region
@@ -26,3 +29,36 @@ on post-fs
     symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
     symlink /dev/block/mapper/pl_a /dev/block/platform/bootdevice/by-name/preloader_raw_a
     symlink /dev/block/mapper/pl_b /dev/block/platform/bootdevice/by-name/preloader_raw_b
+
+on property:ro.crypto.state=encrypted && property:ro.crypto.type=file
+    install_keyring
+
+service keymaster-4-0-beanpod /system/bin/android.hardware.keymaster@4.0-service.beanpod
+    interface android.hardware.keymaster@4.0::IKeymasterDevice default
+    user root
+    group root drmrpc
+    oneshot    
+    disabled
+    seclabel u:r:recovery:s0
+
+on property:vendor.sys.listener.registered=true
+    start keymaster-4-0-beanpod
+
+on property:hwservicemanager.ready=true
+    start keymaster-4-0-beanpod
+   
+on property:ro.crypto.state=unsupported
+    stop teei_daemon
+    stop keymaster-4-0-beanpod 
+    
+on property:ro.crypto.state=unencrypted
+    stop teei_daemon    
+    stop keymaster-4-0-beanpod
+        
+on property:twrp.all.users.decrypted=true
+    stop teei_daemon
+    stop keymaster-4-0-beanpod 
+
+on boot
+    start boot-hal-1-2
+    start health-hal-2-1
