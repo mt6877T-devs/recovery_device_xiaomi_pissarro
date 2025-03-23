@@ -54,6 +54,13 @@ service keystore /system/bin/keystore /tmp/misc/keystore
     disabled
     seclabel u:r:recovery:s0
 
+service beanpod_check_keybox_service /system/bin/bp_kmsetkey_ca -c
+    class late_start
+    user system
+    group system
+    oneshot
+    seclabel u:r:recovery:s0
+
 service gatekeeper-1-0 /system/bin/android.hardware.gatekeeper@1.0-service
     interface android.hardware.gatekeeper@1.0::IGatekeeper default
     user root
@@ -70,23 +77,28 @@ service keymaster-4-0-beanpod /system/bin/android.hardware.keymaster@4.0-service
     seclabel u:r:recovery:s0
 
 on property:vendor.sys.listener.registered=true
+    start beanpod_check_keybox_service
     start keymaster-4-0-beanpod
 
 on property:hwservicemanager.ready=true
+    start beanpod_check_keybox_service
     start keymaster-4-0-beanpod
     start gatekeeper-1-0
    
 on property:ro.crypto.state=unsupported
+    stop beanpod_check_keybox_service
     stop teei_daemon
     stop keymaster-4-0-beanpod 
     stop gatekeeper-1-0
     
 on property:ro.crypto.state=unencrypted
+    stop beanpod_check_keybox_service
     stop teei_daemon    
     stop keymaster-4-0-beanpod
     stop gatekeeper-1-0
         
 on property:twrp.all.users.decrypted=true
+    stop beanpod_check_keybox_service
     stop teei_daemon
     stop keymaster-4-0-beanpod 
     stop gatekeeper-1-0
