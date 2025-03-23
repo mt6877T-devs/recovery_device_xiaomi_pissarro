@@ -73,6 +73,12 @@ service gatekeeper-1-0 /system/bin/android.hardware.gatekeeper@1.0-service
     disabled
     seclabel u:r:recovery:s0
 
+service vibrator-pissarro /system/bin/android.hardware.vibrator-service.pissarro
+    user root
+    group root
+    class hal
+    seclabel u:r:recovery:s0
+
 service keymaster-4-0-beanpod /system/bin/android.hardware.keymaster@4.0-service.beanpod
     interface android.hardware.keymaster@4.0::IKeymasterDevice default
     user root
@@ -128,3 +134,4 @@ on property:twrp.all.users.decrypted=true
 
 on boot
     start health-hal-2-1
+    start vibrator-pissarro

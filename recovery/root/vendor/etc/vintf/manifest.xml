@@ -685,6 +685,10 @@
         </interface>
         <fqname>@1.1::ITidaService/default</fqname>
     </hal>
+    <hal format="aidl">
+        <name>android.hardware.vibrator</name>
+        <fqname>IVibrator/default</fqname>
+    </hal>
     <hal format="hidl">
         <name>vendor.xiaomi.hardware.vsimapp</name>
         <transport>hwbinder</transport>

@@ -1,0 +1,4 @@
+service vibrator-pissarro /vendor/bin/hw/android.hardware.vibrator-service.pissarro
+    class hal
+    user root
+    group root

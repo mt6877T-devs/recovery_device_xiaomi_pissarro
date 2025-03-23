@@ -77,3 +77,7 @@ RECOVERY_LIBRARY_SOURCE_FILES += \
 PRODUCT_PACKAGES += \
     mtk_plpath_utils \
     mtk_plpath_utils.recovery
+
+# Vibrator
+PRODUCT_PACKAGES += \
+    android.hardware.vibrator-service.pissarro
