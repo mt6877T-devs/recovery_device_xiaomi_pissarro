@@ -1,10 +1,6 @@
 # Crypto
 ro.crypto.volume.filenames_mode=aes-256-cts
 
-# Gatekeeper
-ro.hardware.gatekeeper=beanpod
-ro.hardware.kmsetkey=beanpod
-
 # Platform
 ro.mediatek.platform=MT6877
 ro.hardware=mt6877
@@ -12,6 +8,7 @@ ro.hardware=mt6877
 # TEE
 ro.vendor.mtk_tee_gp_support=1
 ro.vendor.mtk_microtrust_tee_support=1
+ro.vendor.mtk_svp_on_mtee_support=1
 
 # USB MTP
 ro.sys.usb.storage.type=mtp

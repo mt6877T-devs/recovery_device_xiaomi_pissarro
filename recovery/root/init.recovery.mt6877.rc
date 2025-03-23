@@ -1,9 +1,14 @@
 import /init.microtrust.rc
 
+import /miteelog.rc
+import /tee-supplicant.rc
+
 on init
     export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
 
 on post-fs
+    start boot-hal-1-2
+    start mtk.plpath.utils.link
     # Support A/B feature for EMMC and UFS boot region
     wait /dev/block/mmcblk0boot0 2
     symlink /dev/block/sda /dev/block/mmcblk0boot0
@@ -76,33 +81,50 @@ service keymaster-4-0-beanpod /system/bin/android.hardware.keymaster@4.0-service
     disabled
     seclabel u:r:recovery:s0
 
-on property:vendor.sys.listener.registered=true
+service keymaster-4-0-mitee /system/bin/android.hardware.keymaster@4.0-service.mitee
+    user root
+    group root drmrpc
+    oneshot    
+    disabled
+    seclabel u:r:recovery:s0
+
+on property:vendor.sys.listener.registered=true && property:ro.boot.tee_type=2
     start beanpod_check_keybox_service
     start keymaster-4-0-beanpod
 
-on property:hwservicemanager.ready=true
+on property:vendor.sys.listener.registered=true && property:ro.boot.tee_type=1
+    stop keymaster-4-0-beanpod
+    start keymaster-4-0-mitee
+
+on property:hwservicemanager.ready=true && property:ro.boot.tee_type=2
     start beanpod_check_keybox_service
     start keymaster-4-0-beanpod
     start gatekeeper-1-0
    
+on property:hwservicemanager.ready=true && property:ro.boot.tee_type=1
+    start keymaster-4-0-mitee
+    start gatekeeper-1-0
+
 on property:ro.crypto.state=unsupported
     stop beanpod_check_keybox_service
     stop teei_daemon
     stop keymaster-4-0-beanpod 
     stop gatekeeper-1-0
-    
+    stop keymaster-4-0-mitee
+
 on property:ro.crypto.state=unencrypted
     stop beanpod_check_keybox_service
     stop teei_daemon    
     stop keymaster-4-0-beanpod
     stop gatekeeper-1-0
+    stop keymaster-4-0-mitee
         
 on property:twrp.all.users.decrypted=true
     stop beanpod_check_keybox_service
     stop teei_daemon
     stop keymaster-4-0-beanpod 
     stop gatekeeper-1-0
+    stop keymaster-4-0-mitee
 
 on boot
-    start boot-hal-1-2
     start health-hal-2-1
